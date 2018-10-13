@@ -29,7 +29,7 @@ app.post('/set-state', function (req, res) {
 		return;
 	}
 
-	if (_phoneState === "Call" || _phoneState === "Hold" || _phoneState === "Idle") {
+	if (["Call", "Hold", "Idle", "Ringing"].includes(_phoneState)) {
 		state.PhoneState = _phoneState;
 	}
 
@@ -48,6 +48,7 @@ app.post('/set-state', function (req, res) {
 app.listen(port, function () {
 	console.log(`Example app listening on port !`);
 });
+
 
 const IsValidAgentState = function (agentState) {
 	return agentState === "READY"

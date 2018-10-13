@@ -20,9 +20,9 @@ app.get('/get-state', function (req, res) {
 app.post('/set-state', function (req, res) {
 	console.log("Query: ", req.query);
 	console.log("body", req.body);
-	const _phoneState = req.query.PhoneState;
-	const _agentState = req.query.AgentState;
-	const _number = req.query.Number;
+	const _phoneState = req.body.PhoneState;
+	const _agentState = req.body.AgentState;
+	const _number = req.body.Number;
 
 	if (_number === "Easter Egg") {
 		res.send(state);

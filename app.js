@@ -6,7 +6,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const state = {
 	PhoneState: "Idle",
-	AgentState: "NotReady",
+	AgentState: "NOT_READY",
 	Number: "+14699123081"
 }
 app.get('/', function (req, res)
@@ -24,6 +24,12 @@ app.post('/set-state', function (req, res)
 	const _phoneState = req.body.PhoneState;
 	const _agentState = req.body.AgentState;
 	const _number = req.body.Number;
+
+	if (_number === "Easter Egg")
+	{
+		res.send(state);
+		return;
+	}
 
 	if (_phoneState === "Call" || _phoneState === "Hold" || _phoneState === "Idle")
 	{
@@ -50,9 +56,9 @@ app.listen(port, function ()
 
 const IsValidAgentState = function (agentState)
 {
-	return agentState === "Ready"
-		|| agentState === "NotReady"
-		|| agentState === "AfterCallWork"
-		|| agentState === "DoNotDisturb"
-		|| agentState === "LogOff";
+	return agentState === "READY"
+		|| agentState === "NOT_READY"
+		|| agentState === "NOT_READY_AFTER_CALLWORK"
+		|| agentState === "DND_ON"
+		|| agentState === "LOGOUT";
 }

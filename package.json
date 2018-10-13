@@ -1,0 +1,23 @@
+{
+	"name": "super-guacamole",
+	"version": "1.0.0",
+	"description": "hacks",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node app.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/JFleming4/super-guacamole.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/JFleming4/super-guacamole/issues"
+	},
+	"homepage": "https://github.com/JFleming4/super-guacamole#readme",
+	"dependencies": {
+		"express": "^4.16.4"
+	}
+}

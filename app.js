@@ -18,6 +18,8 @@ app.get('/get-state', function (req, res) {
 });
 
 app.post('/set-state', function (req, res) {
+	console.log("Query: ", req.query);
+	console.log("body", req.body);
 	const _phoneState = req.query.PhoneState;
 	const _agentState = req.query.AgentState;
 	const _number = req.query.Number;
@@ -39,6 +41,7 @@ app.post('/set-state', function (req, res) {
 		state.Number = _number;
 	}
 
+	console.log("State: ", state);
 	res.send(state);
 });
 

@@ -9,5 +9,17 @@ module.exports = {
 	devServer: {
 		contentBase: "./dist",
 		https: true
+	},
+	module: {
+		rules: [
+			{
+				test: /\.css$/,
+				use: [
+					'style-loader',
+					'css-loader'
+				]
+			}
+
+		]
 	}
 }

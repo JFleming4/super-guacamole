@@ -17,10 +17,10 @@ app.get('/get-state', function (req, res) {
 	res.send(state);
 });
 
-app.get('/set-state', function (req, res) {
-	const _phoneState = req.body.PhoneState;
-	const _agentState = req.body.AgentState;
-	const _number = req.body.Number;
+app.post('/set-state', function (req, res) {
+	const _phoneState = req.query.PhoneState;
+	const _agentState = req.query.AgentState;
+	const _number = req.query.Number;
 
 	if (_number === "Easter Egg") {
 		res.send(state);
@@ -35,7 +35,7 @@ app.get('/set-state', function (req, res) {
 		state.AgentState = _agentState;
 	}
 
-	if (_number.length === 11) {
+	if (_number && _number.length === 11) {
 		state.Number = _number;
 	}
 

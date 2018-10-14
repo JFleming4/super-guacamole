@@ -5,27 +5,53 @@ let AgentState = document.createElement('div');
 let PhoneState = document.createElement('div');
 let NumberState = document.createElement('div');
 
-let SetAgentReady = document.createElement('button');
-let SetAgentNotReady = document.createElement('button');
-let SetAgentAfterCallWork = document.createElement('button');
-let SetAgentDND = document.createElement('button');
-let SetAgentLogOut = document.createElement('button');
+let SetAgentReady = document.createElement('div');
+let SetAgentNotReady = document.createElement('div');
+let SetAgentAfterCallWork = document.createElement('div');
+let SetAgentDND = document.createElement('div');
+let SetAgentLogOut = document.createElement('div');
 
+let DialContainer = document.createElement('div');
 let DialBtn = document.createElement('button');
+let DialBox = document.createElement('input');
 let AnswerBtn = document.createElement('button');
 let HoldBtn = document.createElement('button');
 let EndCall = document.createElement('button');
 let RetrieveCall = document.createElement('button');
 
 window.addEventListener("message", handleClickToDial, false);
+window.onclick = function (event)
+{
+	if (!event.target.matches('.dropbtn'))
+	{
+
+		var dropdowns = document.getElementsByClassName("dropdown-content");
+		var i;
+		for (i = 0; i < dropdowns.length; i++)
+		{
+			var openDropdown = dropdowns[i];
+			if (openDropdown.classList.contains('show'))
+			{
+				openDropdown.classList.remove('show');
+			}
+		}
+	}
+}
+
 let state = {};
 const url = 'https://super-guacamole.herokuapp.com/';
 function handleClickToDial(event)
 {
-	var data = JSON.parse(event.data);
-	if (data.number)
+	try
 	{
-		SetCTDState(data.number)
+		var data = JSON.parse(event.data);
+		if (data.number)
+		{
+			SetCTDState(data.number)
+		}
+	} catch (error)
+	{
+		console.log("failed click to dial");
 	}
 }
 
@@ -73,25 +99,44 @@ function ctiPhone()
 
 function buildAgentButtons(agentStateContainer)
 {
+	agentStateContainer.classList.add("dropdown");
+	let button = document.createElement('button');
+	let agentStateDropdown = document.createElement('div');
+
+	button.addEventListener('click', () => handleAgentDropdownClick());
+	button.classList.add("dropbtn");
+	button.innerHTML = "Change Agent State";
+
+	agentStateDropdown.classList.add("dropdown-content");
+	agentStateDropdown.setAttribute("id", "agent-dropdown");
+
+	agentStateContainer.appendChild(button);
+	agentStateContainer.appendChild(agentStateDropdown);
+
 	SetAgentReady.innerHTML = "Ready";
 	SetAgentNotReady.innerHTML = "Not Ready";
 	SetAgentAfterCallWork.innerHTML = "After Call Work";
 	SetAgentDND.innerHTML = "Do Not Disturb";
 	SetAgentLogOut.innerHTML = "Log Out";
 
-	SetAgentReady.addEventListener('click', () => SetAgentState("READY"))
-	SetAgentNotReady.addEventListener('click', () => SetAgentState("NOT_READY"))
-	SetAgentAfterCallWork.addEventListener('click', () => SetAgentState("NOT_READY_AFTER_CALLWORK"))
-	SetAgentDND.addEventListener('click', () => SetAgentState("DND_ON"))
-	SetAgentLogOut.addEventListener('click', () => SetAgentState("LOGOUT"))
+	SetAgentReady.addEventListener('click', () => SetAgentState("Ready"))
+	SetAgentNotReady.addEventListener('click', () => SetAgentState("NotReady"))
+	SetAgentAfterCallWork.addEventListener('click', () => SetAgentState("AfterCallWork"))
+	SetAgentDND.addEventListener('click', () => SetAgentState("DoNotDisturbOn"))
+	SetAgentLogOut.addEventListener('click', () => SetAgentState("Offline"))
 
-	agentStateContainer.appendChild(SetAgentReady);
-	agentStateContainer.appendChild(SetAgentNotReady);
-	agentStateContainer.appendChild(SetAgentAfterCallWork);
-	agentStateContainer.appendChild(SetAgentDND);
-	agentStateContainer.appendChild(SetAgentLogOut);
+	agentStateDropdown.appendChild(SetAgentReady);
+	agentStateDropdown.appendChild(SetAgentNotReady);
+	agentStateDropdown.appendChild(SetAgentAfterCallWork);
+	agentStateDropdown.appendChild(SetAgentDND);
+	agentStateDropdown.appendChild(SetAgentLogOut);
 
 	HideAgentButtons();
+}
+
+function handleAgentDropdownClick()
+{
+	document.getElementById("agent-dropdown").classList.toggle("show");
 }
 
 function UnhideAgentButtons()
@@ -117,19 +162,19 @@ function SetAgentButtons(agentState)
 	UnhideAgentButtons();
 	switch (agentState)
 	{
-		case "READY":
+		case "Ready":
 			SetAgentReady.classList.add("hidden");
 			break;
-		case "NOT_READY":
+		case "NotReady":
 			SetAgentNotReady.classList.add("hidden");
 			break;
-		case "NOT_READY_AFTER_CALLWORK":
+		case "AfterCallWork":
 			SetAgentAfterCallWork.classList.add("hidden");
 			break;
-		case "DND_ON":
+		case "DoNotDisturbOn":
 			SetAgentDND.classList.add("hidden");
 			break;
-		case "LOGOUT":
+		case "Offline":
 			SetAgentLogOut.classList.add("hidden");
 			break;
 	}
@@ -154,13 +199,19 @@ function buildPhoneButtons(phoneContainer)
 	EndCall.innerHTML = "End";
 	RetrieveCall.innerHTML = "Retrieve";
 
-	DialBtn.addEventListener('click', () => SetPhoneState("Dialing"))
+	DialBtn.addEventListener('click', () => SetDialState("Dialing"))
 	AnswerBtn.addEventListener('click', () => SetPhoneState("Call"))
 	HoldBtn.addEventListener('click', () => SetPhoneState("Hold"))
 	EndCall.addEventListener('click', () => SetPhoneState("Idle"))
 	RetrieveCall.addEventListener('click', () => SetPhoneState("Call"))
 
-	phoneContainer.appendChild(DialBtn);
+	DialBox.classList.add("dialbox");
+	DialBox.setAttribute("id", "dialbox");
+
+	DialContainer.appendChild(DialBox);
+	DialContainer.appendChild(DialBtn);
+
+	phoneContainer.appendChild(DialContainer);
 	phoneContainer.appendChild(AnswerBtn);
 	phoneContainer.appendChild(HoldBtn);
 	phoneContainer.appendChild(EndCall);
@@ -171,7 +222,7 @@ function buildPhoneButtons(phoneContainer)
 
 function HidePhoneButtons()
 {
-	DialBtn.classList.add("hidden");
+	DialContainer.classList.add("hidden");
 	AnswerBtn.classList.add("hidden");
 	HoldBtn.classList.add("hidden");
 	EndCall.classList.add("hidden");
@@ -184,7 +235,7 @@ function SetPhoneButtons(phoneState)
 	switch (phoneState)
 	{
 		case "Idle":
-			DialBtn.classList.remove("hidden");
+			DialContainer.classList.remove("hidden");
 			break;
 		case "Ringing":
 			AnswerBtn.classList.remove("hidden");
@@ -215,6 +266,25 @@ async function SetPhoneState(phoneState)
 	UpdateUi();
 }
 
+function SetDialState()
+{
+	console.log("DIALING STATE super-guac");
+	let number = document.getElementById("dialbox").value.trim();
+	if (!number) { return; }
+	if (number.length === 12)
+	{
+		SetCTDState(number);
+	}
+	else if (number.length === 11)
+	{
+		SetCTDState("+" + number);
+	}
+	else if (number.length === 10)
+	{
+		SetCTDState("+1" + number);
+	}
+}
+
 function updateState()
 {
 	axios({
@@ -235,9 +305,9 @@ function updateState()
 
 function UpdateUi()
 {
-	AgentState.innerHTML = state["AgentState"];
-	PhoneState.innerHTML = state["PhoneState"];
-	NumberState.innerHTML = state["Number"];
+	AgentState.innerHTML = "Agent State: " + state["AgentState"];
+	PhoneState.innerHTML = "Telephony State: " + state["PhoneState"];
+	// NumberState.innerHTML = state["Number"];
 	SetPhoneButtons(state.PhoneState);
 	SetAgentButtons(state.AgentState);
 }

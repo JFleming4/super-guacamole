@@ -213,6 +213,21 @@ function buildPhoneButtons(phoneContainer)
 	EndCall.innerHTML = "End";
 	RetrieveCall.innerHTML = "Retrieve";
 
+	DialBtn.classList.add('tel-btn');
+	DialBtn.classList.add('dial-btn');
+
+	AnswerBtn.classList.add('tel-btn');
+	AnswerBtn.classList.add('answ-btn');
+
+	HoldBtn.classList.add('tel-btn');
+	HoldBtn.classList.add('hold-btn');
+
+	EndCall.classList.add('tel-btn');
+	EndCall.classList.add('end-btn');
+
+	RetrieveCall.classList.add('tel-btn');
+	RetrieveCall.classList.add('retr-btn');
+
 	DialBtn.addEventListener('click', () => SetDialState("Dialing"))
 	AnswerBtn.addEventListener('click', () => SetPhoneState("Call"))
 	HoldBtn.addEventListener('click', () => SetPhoneState("Hold"))

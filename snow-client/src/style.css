@@ -9,6 +9,8 @@
     font-size: 13px;
     border: none;
     cursor: pointer;
+    border-radius: 7px;
+    margin: 10px 0px;
 }
 
 /* Dropdown button on hover & focus */
@@ -25,10 +27,11 @@
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
     display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 150px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	position: absolute;
+	top: 85%;
+    background-color: #ffffff;
+    min-width: 100%;
+    /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
     z-index: 1;
 }
 
@@ -36,7 +39,9 @@
 .dropdown-content div {
     color: black;
     padding: 5px 5px;
-    text-decoration: none;
+	text-decoration: none;
+	border: 1px;
+    border-style: solid;
 }
 
 /* Change color of dropdown links on hover */
@@ -53,4 +58,29 @@
 	position: relative;
 	widows: 50px;
 	height: 50px;
+}
+
+.tel-btn{
+    border-radius: 10px;
+    font-size: 14px;
+    padding: 3px 9px;
+    border: 0px;
+    margin: 5px;
+}
+
+.dial-btn{
+	background: lightgreen;
+}
+.answ-btn{
+	background: lightgreen;
+}
+.hold-btn{
+	background: orange;
+}
+.end-btn{
+	background: red;
+}
+
+.retr-btn{
+	background: lightgreen;
 }

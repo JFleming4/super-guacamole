@@ -12,6 +12,7 @@ let SetAgentDND = document.createElement('button');
 let SetAgentLogOut = document.createElement('button');
 
 let DialBtn = document.createElement('button');
+let AnswerBtn = document.createElement('button');
 let HoldBtn = document.createElement('button');
 let EndCall = document.createElement('button');
 let RetrieveCall = document.createElement('button');
@@ -30,7 +31,7 @@ function ctiPhone()
 	let stateDiv = document.createElement('div');
 	stateBtn.addEventListener('click', () => updateState());
 
-	container.appendChild(stateBtn);
+	//container.appendChild(stateBtn);
 	container.appendChild(stateDiv);
 	container.appendChild(agentStateContainer);
 	container.appendChild(phoneStateContainer);
@@ -41,6 +42,8 @@ function ctiPhone()
 
 	buildAgentButtons(agentStateContainer);
 	buildPhoneButtons(phoneStateContainer);
+
+	setInterval(() => updateState(), 100);
 
 	return container;
 }
@@ -68,31 +71,6 @@ function buildAgentButtons(agentStateContainer)
 	HideAgentButtons();
 }
 
-function buildPhoneButtons(phoneContainer)
-{
-	DialBtn.innerHTML = "Dial";
-	HoldBtn.innerHTML = "Hold";
-	EndCall.innerHTML = "End";
-	RetrieveCall.innerHTML = "Retrieve";
-
-	phoneContainer.appendChild(DialBtn);
-	phoneContainer.appendChild(HoldBtn);
-	phoneContainer.appendChild(EndCall);
-	phoneContainer.appendChild(RetrieveCall);
-}
-
-function updateState()
-{
-	axios({
-		method: "GET",
-		url: url + "get-state"
-	}).then(res =>
-	{
-		state = res.data;
-		UpdateUi();
-	});
-}
-
 function UnhideAgentButtons()
 {
 	SetAgentReady.classList.remove("hidden");
@@ -109,30 +87,6 @@ function HideAgentButtons()
 	SetAgentAfterCallWork.classList.add("hidden");
 	SetAgentDND.classList.add("hidden");
 	SetAgentLogOut.classList.add("hidden");
-}
-
-function UpdateUi()
-{
-	AgentState.innerHTML = state["AgentState"];
-	PhoneState.innerHTML = state["PhoneState"];
-	NumberState.innerHTML = state["Number"];
-	SetPhoneButtons(state.PhoneState);
-	SetAgentButtons(state.AgentState);
-}
-
-function SetPhoneButtons(phoneState)
-{
-	switch (phoneState)
-	{
-		case "Idle":
-			break;
-		case "Ringing":
-			break;
-		case "Call":
-			break;
-		case "Hold":
-			break;
-	}
 }
 
 function SetAgentButtons(agentState)
@@ -167,6 +121,102 @@ async function SetAgentState(agentState)
 	});
 	state = result.data;
 	UpdateUi();
+}
+
+function buildPhoneButtons(phoneContainer)
+{
+	DialBtn.innerHTML = "Dial";
+	AnswerBtn.innerHTML = "Answer";
+	HoldBtn.innerHTML = "Hold";
+	EndCall.innerHTML = "End";
+	RetrieveCall.innerHTML = "Retrieve";
+
+	DialBtn.addEventListener('click', () => SetPhoneState("Dialing"))
+	AnswerBtn.addEventListener('click', () => SetPhoneState("Call"))
+	HoldBtn.addEventListener('click', () => SetPhoneState("Hold"))
+	EndCall.addEventListener('click', () => SetPhoneState("Idle"))
+	RetrieveCall.addEventListener('click', () => SetPhoneState("Call"))
+
+	phoneContainer.appendChild(DialBtn);
+	phoneContainer.appendChild(AnswerBtn);
+	phoneContainer.appendChild(HoldBtn);
+	phoneContainer.appendChild(EndCall);
+	phoneContainer.appendChild(RetrieveCall);
+
+	HidePhoneButtons();
+}
+
+function HidePhoneButtons()
+{
+	DialBtn.classList.add("hidden");
+	AnswerBtn.classList.add("hidden");
+	HoldBtn.classList.add("hidden");
+	EndCall.classList.add("hidden");
+	RetrieveCall.classList.add("hidden");
+}
+
+function SetPhoneButtons(phoneState)
+{
+	HidePhoneButtons();
+	switch (phoneState)
+	{
+		case "Idle":
+			DialBtn.classList.remove("hidden");
+			break;
+		case "Ringing":
+			AnswerBtn.classList.remove("hidden");
+			EndCall.classList.remove("hidden");
+			break;
+		case "Call":
+			HoldBtn.classList.remove("hidden");
+			EndCall.classList.remove("hidden");
+			break;
+		case "Hold":
+			RetrieveCall.classList.remove("hidden");
+			EndCall.classList.remove("hidden");
+			break;
+		case "Dialing":
+			EndCall.classList.remove("hidden");
+			break;
+	}
+}
+
+async function SetPhoneState(phoneState)
+{
+	const result = await axios({
+		method: "POST",
+		url: url + "set-state",
+		data: { PhoneState: phoneState }
+	});
+	state = result.data;
+	UpdateUi();
+}
+
+function updateState()
+{
+	axios({
+		method: "GET",
+		url: url + "get-state"
+	}).then(res =>
+	{
+		const newState = res.data
+		if (newState.AgentState !== state.AgentState
+			|| newState.PhoneState !== state.PhoneState
+			|| newState.Number !== state.Number)
+		{
+			state = res.data;
+			UpdateUi();
+		}
+	});
+}
+
+function UpdateUi()
+{
+	AgentState.innerHTML = state["AgentState"];
+	PhoneState.innerHTML = state["PhoneState"];
+	NumberState.innerHTML = state["Number"];
+	SetPhoneButtons(state.PhoneState);
+	SetAgentButtons(state.AgentState);
 }
 
 document.body.appendChild(ctiPhone());

@@ -29,7 +29,7 @@ app.post('/set-state', function (req, res) {
 		return;
 	}
 
-	if (["Call", "Hold", "Idle", "Ringing"].includes(_phoneState)) {
+	if (["Call", "Hold", "Idle", "Ringing", "Dialing"].includes(_phoneState)) {
 		state.PhoneState = _phoneState;
 	}
 

@@ -17,9 +17,32 @@ let HoldBtn = document.createElement('button');
 let EndCall = document.createElement('button');
 let RetrieveCall = document.createElement('button');
 
-
+window.addEventListener("message", handleClickToDial, false);
 let state = {};
 const url = 'https://super-guacamole.herokuapp.com/';
+function handleClickToDial(event)
+{
+	var data = JSON.parse(event.data);
+	if (data.number)
+	{
+		SetCTDState(data.number)
+	}
+}
+
+async function SetCTDState(number)
+{
+	const result = await axios({
+		method: "POST",
+		url: url + "set-state",
+		data: {
+			PhoneState: "Dialing",
+			Number: number
+		}
+	});
+	state = result.data;
+	UpdateUi();
+}
+
 function ctiPhone()
 {
 	let container = document.createElement('div');

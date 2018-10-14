@@ -9,53 +9,48 @@ const state = {
 	AgentState: "NOT_READY",
 	Number: "+14699123081"
 }
-app.get('/', function (req, res)
-{
+app.get('/', function (req, res) {
 	res.send(JSON.stringify({ Hello: 'World' }));
 });
 
-app.get('/get-state', function (req, res)
-{
+app.get('/get-state', function (req, res) {
 	res.send(state);
 });
 
-app.post('/set-state', function (req, res)
-{
+app.post('/set-state', function (req, res) {
+	console.log("Query: ", req.query);
+	console.log("body", req.body);
 	const _phoneState = req.body.PhoneState;
 	const _agentState = req.body.AgentState;
 	const _number = req.body.Number;
 
-	if (_number === "Easter Egg")
-	{
+	if (_number === "Easter Egg") {
 		res.send(state);
 		return;
 	}
 
-	if (_phoneState === "Call" || _phoneState === "Hold" || _phoneState === "Idle")
-	{
+	if (["Call", "Hold", "Idle", "Ringing", "Dialing"].includes(_phoneState)) {
 		state.PhoneState = _phoneState;
 	}
 
-	if (IsValidAgentState(_agentState))
-	{
+	if (IsValidAgentState(_agentState)) {
 		state.AgentState = _agentState;
 	}
 
-	if (_number.length === 11)
-	{
+	if (_number && _number.length === 11) {
 		state.Number = _number;
 	}
 
+	console.log("State: ", state);
 	res.send(state);
 });
 
-app.listen(port, function ()
-{
+app.listen(port, function () {
 	console.log(`Example app listening on port !`);
 });
 
-const IsValidAgentState = function (agentState)
-{
+
+const IsValidAgentState = function (agentState) {
 	return agentState === "READY"
 		|| agentState === "NOT_READY"
 		|| agentState === "NOT_READY_AFTER_CALLWORK"

@@ -33,7 +33,7 @@ app.post('/set-state', function (req, res) {
 		state.PhoneState = _phoneState;
 	}
 
-	if (IsValidAgentState(_agentState)) {
+	if (_agentState) {
 		state.AgentState = _agentState;
 	}
 
@@ -51,9 +51,10 @@ app.listen(port, function () {
 
 
 const IsValidAgentState = function (agentState) {
-	return agentState === "READY"
-		|| agentState === "NOT_READY"
-		|| agentState === "NOT_READY_AFTER_CALLWORK"
-		|| agentState === "DND_ON"
-		|| agentState === "LOGOUT";
+	return agentState === "Ready"
+		|| agentState === "NotReady"
+		|| agentState === "AfterCallWork"
+		|| agentState === "DoNotDisturbOn"
+		|| agentState === "LogoutDoNotDisturbOn"
+		|| agentState === "Offline";
 }

@@ -20,8 +20,7 @@ let RetrieveCall = document.createElement('button');
 
 let state = {};
 const url = 'https://super-guacamole.herokuapp.com/';
-function ctiPhone()
-{
+function ctiPhone() {
 	let container = document.createElement('div');
 	let stateBtn = document.createElement('button');
 	let agentStateContainer = document.createElement('div');
@@ -48,19 +47,18 @@ function ctiPhone()
 	return container;
 }
 
-function buildAgentButtons(agentStateContainer)
-{
+function buildAgentButtons(agentStateContainer) {
 	SetAgentReady.innerHTML = "Ready";
 	SetAgentNotReady.innerHTML = "Not Ready";
 	SetAgentAfterCallWork.innerHTML = "After Call Work";
 	SetAgentDND.innerHTML = "Do Not Disturb";
 	SetAgentLogOut.innerHTML = "Log Out";
 
-	SetAgentReady.addEventListener('click', () => SetAgentState("READY"))
-	SetAgentNotReady.addEventListener('click', () => SetAgentState("NOT_READY"))
-	SetAgentAfterCallWork.addEventListener('click', () => SetAgentState("NOT_READY_AFTER_CALLWORK"))
-	SetAgentDND.addEventListener('click', () => SetAgentState("DND_ON"))
-	SetAgentLogOut.addEventListener('click', () => SetAgentState("LOGOUT"))
+	SetAgentReady.addEventListener('click', () => SetAgentState("Ready"))
+	SetAgentNotReady.addEventListener('click', () => SetAgentState("NotReady"))
+	SetAgentAfterCallWork.addEventListener('click', () => SetAgentState("AfterCallWork"))
+	SetAgentDND.addEventListener('click', () => SetAgentState("DoNotDisturbOn"))
+	SetAgentLogOut.addEventListener('click', () => SetAgentState("Offline"))
 
 	agentStateContainer.appendChild(SetAgentReady);
 	agentStateContainer.appendChild(SetAgentNotReady);
@@ -71,8 +69,7 @@ function buildAgentButtons(agentStateContainer)
 	HideAgentButtons();
 }
 
-function UnhideAgentButtons()
-{
+function UnhideAgentButtons() {
 	SetAgentReady.classList.remove("hidden");
 	SetAgentNotReady.classList.remove("hidden");
 	SetAgentAfterCallWork.classList.remove("hidden");
@@ -80,8 +77,7 @@ function UnhideAgentButtons()
 	SetAgentLogOut.classList.remove("hidden");
 }
 
-function HideAgentButtons()
-{
+function HideAgentButtons() {
 	SetAgentReady.classList.add("hidden");
 	SetAgentNotReady.classList.add("hidden");
 	SetAgentAfterCallWork.classList.add("hidden");
@@ -89,31 +85,28 @@ function HideAgentButtons()
 	SetAgentLogOut.classList.add("hidden");
 }
 
-function SetAgentButtons(agentState)
-{
+function SetAgentButtons(agentState) {
 	UnhideAgentButtons();
-	switch (agentState)
-	{
-		case "READY":
+	switch (agentState) {
+		case "Ready":
 			SetAgentReady.classList.add("hidden");
 			break;
-		case "NOT_READY":
+		case "NotReady":
 			SetAgentNotReady.classList.add("hidden");
 			break;
-		case "NOT_READY_AFTER_CALLWORK":
+		case "AfterCallWork":
 			SetAgentAfterCallWork.classList.add("hidden");
 			break;
-		case "DND_ON":
+		case "DoNotDisturbOn":
 			SetAgentDND.classList.add("hidden");
 			break;
-		case "LOGOUT":
+		case "Offline":
 			SetAgentLogOut.classList.add("hidden");
 			break;
 	}
 }
 
-async function SetAgentState(agentState)
-{
+async function SetAgentState(agentState) {
 	const result = await axios({
 		method: "POST",
 		url: url + "set-state",
@@ -123,8 +116,7 @@ async function SetAgentState(agentState)
 	UpdateUi();
 }
 
-function buildPhoneButtons(phoneContainer)
-{
+function buildPhoneButtons(phoneContainer) {
 	DialBtn.innerHTML = "Dial";
 	AnswerBtn.innerHTML = "Answer";
 	HoldBtn.innerHTML = "Hold";
@@ -146,8 +138,7 @@ function buildPhoneButtons(phoneContainer)
 	HidePhoneButtons();
 }
 
-function HidePhoneButtons()
-{
+function HidePhoneButtons() {
 	DialBtn.classList.add("hidden");
 	AnswerBtn.classList.add("hidden");
 	HoldBtn.classList.add("hidden");
@@ -155,11 +146,9 @@ function HidePhoneButtons()
 	RetrieveCall.classList.add("hidden");
 }
 
-function SetPhoneButtons(phoneState)
-{
+function SetPhoneButtons(phoneState) {
 	HidePhoneButtons();
-	switch (phoneState)
-	{
+	switch (phoneState) {
 		case "Idle":
 			DialBtn.classList.remove("hidden");
 			break;
@@ -181,8 +170,7 @@ function SetPhoneButtons(phoneState)
 	}
 }
 
-async function SetPhoneState(phoneState)
-{
+async function SetPhoneState(phoneState) {
 	const result = await axios({
 		method: "POST",
 		url: url + "set-state",
@@ -192,26 +180,22 @@ async function SetPhoneState(phoneState)
 	UpdateUi();
 }
 
-function updateState()
-{
+function updateState() {
 	axios({
 		method: "GET",
 		url: url + "get-state"
-	}).then(res =>
-	{
+	}).then(res => {
 		const newState = res.data
 		if (newState.AgentState !== state.AgentState
 			|| newState.PhoneState !== state.PhoneState
-			|| newState.Number !== state.Number)
-		{
+			|| newState.Number !== state.Number) {
 			state = res.data;
 			UpdateUi();
 		}
 	});
 }
 
-function UpdateUi()
-{
+function UpdateUi() {
 	AgentState.innerHTML = state["AgentState"];
 	PhoneState.innerHTML = state["PhoneState"];
 	NumberState.innerHTML = state["Number"];

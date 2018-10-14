@@ -1,5 +1,7 @@
 import * as axios from 'axios';
+import Icon from './super-taco.png';
 import './style.css'
+import jQuery from 'jquery';
 
 let AgentState = document.createElement('div');
 let PhoneState = document.createElement('div');
@@ -18,6 +20,8 @@ let AnswerBtn = document.createElement('button');
 let HoldBtn = document.createElement('button');
 let EndCall = document.createElement('button');
 let RetrieveCall = document.createElement('button');
+
+let hero = document.createElement('div');
 
 window.addEventListener("message", handleClickToDial, false);
 window.onclick = function (event)
@@ -65,6 +69,7 @@ async function SetCTDState(number)
 			Number: number
 		}
 	});
+	document.getElementById('dialbox').value = "";
 	state = result.data;
 	UpdateUi();
 }
@@ -91,6 +96,15 @@ function ctiPhone()
 
 	buildAgentButtons(agentStateContainer);
 	buildPhoneButtons(phoneStateContainer);
+
+	hero.setAttribute('id', 'hero');
+	hero.classList.add('hidden');
+	hero.classList.add('hero');
+	var mascot = new Image();
+	mascot.src = Icon;
+	hero.appendChild(mascot);
+
+	container.appendChild(hero);
 
 	setInterval(() => updateState(), 100);
 
@@ -269,7 +283,12 @@ async function SetPhoneState(phoneState)
 function SetDialState()
 {
 	console.log("DIALING STATE super-guac");
-	let number = document.getElementById("dialbox").value.trim();
+	let number = document.getElementById("dialbox").value;
+	if (number === "Easter Egg")
+	{
+		superTaco();
+		return;
+	}
 	if (!number) { return; }
 	if (number.length === 12)
 	{
@@ -310,6 +329,18 @@ function UpdateUi()
 	// NumberState.innerHTML = state["Number"];
 	SetPhoneButtons(state.PhoneState);
 	SetAgentButtons(state.AgentState);
+}
+
+function superTaco()
+{
+	var $ = jQuery;
+	var height = "+=" + $(document).height();
+	$("#hero").toggle("hidden").animate({
+		bottom: height
+	}, 5000, () =>
+		{
+			$("#hero").toggle("hidden");
+		});
 }
 
 document.body.appendChild(ctiPhone());

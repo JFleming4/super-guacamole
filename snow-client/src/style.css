@@ -48,3 +48,9 @@
 .dialbox{
 	width: 100px;
 }
+
+.hero{
+	position: relative;
+	widows: 50px;
+	height: 50px;
+}
